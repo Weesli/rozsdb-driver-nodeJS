@@ -35,12 +35,12 @@ const requestBuilder = async (
     }
 };
 const typeConverter = (type: CollectionActionType): "GET" | "POST" => {
-  return type.toString() === "CONNECTION" ? "GET" : "POST";
+  return type === "CONNECTION" ? "GET" : "POST";
 };
 const getPath = (type: CollectionActionType, connection: Connection): string => {
   let path = "";
 
-  switch (type.toString()) {
+  switch (type) {
     case "INSERTORUPDATE":
       path = "insertorupdate";
       break;
@@ -56,6 +56,9 @@ const getPath = (type: CollectionActionType, connection: Connection): string => 
     case "FINDBYID":
       path = "findbyid";
       break;
+    case "CONNECTION":
+      path = ''
+      break;    
     default:
       throw new Error(`Unknown action type: ${type}`);
   }

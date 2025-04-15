@@ -32,15 +32,15 @@ export interface DatabaseObject {
 
 export interface RequestDetails {
     headers: Record<string, string>;
-    body: string;
+    body: any;
     paths: string[];
     hasBody: boolean;
 }
 export enum CollectionActionType {
-    CONNECTION,
-    INSERTORUPDATE,
-    FINDALL,
-    FINDBYID,
-    FIND,
-    DELETE
+    CONNECTION = "CONNECTION",
+    INSERTORUPDATE = "INSERTORUPDATE",
+    FINDALL = "FINDALL",
+    FINDBYID = "FINDBYID",
+    FIND = "FIND",
+    DELETE = "DELETE"
 }

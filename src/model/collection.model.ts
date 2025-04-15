@@ -54,18 +54,32 @@ export class CollectionImpl implements Collection {
     }
 
     async findAll(): Promise<DatabaseObject[]> {
-        const response = await send(this.client, this, this.connection, CollectionActionType.FINDALL, {headers: {}, body: '', paths: [], hasBody: false});
+        const response = await send(this.client, this, this.connection, CollectionActionType.FINDALL, {
+            headers: {},
+            body: '',
+            paths: [],
+            hasBody: false
+        });
+        
         if (response?.statusCode !== 200) {
             throw new Error(`Failed to find all data in collection ${this.name}: ${response?.statusMessage}`);
         }
-        const responseBody = response?.body as { message: any[]};
-        return await Promise.all(responseBody.message.map(async obj => await DatabaseObjectImpl.fromData(obj, this))); 
+        
+        const { message } = response.body as { message: string };
+
+        const messageArray = message.split(',').map(item => item.trim());
+    
+        return await Promise.all(
+            messageArray.map(async (obj) => await DatabaseObjectImpl.fromData(obj, this))
+        );
+        
     }
 
-    async findById(id: string): Promise<DatabaseObject> {
-        const response = await send(this.client, this, this.connection, CollectionActionType.FINDBYID, {headers: {}, body: JSON.stringify({
-            id: id
-        }), paths: [], hasBody: true});
+    async findById(value: string): Promise<DatabaseObject> {
+        const body = {
+            id: value
+        }
+        const response = await send(this.client, this, this.connection, CollectionActionType.FINDBYID, {headers: {}, body: body, paths: [], hasBody: true});
         if (response?.statusCode !== 200) {
             throw new Error(`Failed to find data by ID in collection ${this.name}: ${response?.statusMessage}`);
         }
@@ -74,15 +88,20 @@ export class CollectionImpl implements Collection {
     }
 
     async find(where: string, value: string): Promise<DatabaseObject[]> {
-        const response = await send(this.client, this, this.connection, CollectionActionType.FIND, {headers: {}, body: JSON.stringify({
+        const response = await send(this.client, this, this.connection, CollectionActionType.FIND, {headers: {}, body: {
             field: where,
             value: value
-        }), paths: [], hasBody: true});
+        }, paths: [], hasBody: true});
         if (response?.statusCode !== 200) {
             throw new Error(`Failed to find data in collection ${this.name}: ${response?.statusMessage}`);
         }
-        const responseBody = response?.body as { message: any[]};
-        return await Promise.all(responseBody.message.map(async obj => await DatabaseObjectImpl.fromData(obj, this)));
+        const { message } = response.body as { message: string };
+
+        const messageArray = message.split(',').map(item => item.trim());
+    
+        return await Promise.all(
+            messageArray.map(async (obj) => await DatabaseObjectImpl.fromData(obj, this))
+        );
     }
     
 }
