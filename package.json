@@ -1,0 +1,23 @@
+{
+  "name": "rozsdb-driver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "commonjs",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@toondepauw/node-zstd": "^1.2.0",
+    "got": "^12.6.1",
+    "node-zstandard": "^1.2.4",
+    "simple-zstd": "^1.4.2"
+  }
+}
