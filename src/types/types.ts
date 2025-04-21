@@ -1,3 +1,5 @@
+import DatabaseClient from "../client/database.client";
+
 export interface UriDetails {
     host: string;
     port: number;
@@ -7,16 +9,18 @@ export interface UriDetails {
 }
 
 export interface Collection {
+    connect(): Promise<Collection>;
     getName: string;
-    connect: () => Promise<Connection>;
-    insertOrUpdate: (data: string, id?: string) => Promise<DatabaseObject>;
-    delete: (id: string) => Promise<boolean>;
-    findAll: () => Promise<DatabaseObject[]>;
-    findById: (id: string) => Promise<DatabaseObject>;
-    find: (where: string, value: string) => Promise<DatabaseObject[]>;
-}
+    insertOrUpdate(data: string, id: string | undefined): Promise<DatabaseObject>;
+    delete(id: string): Promise<boolean>;
+    findAll(): Promise<DatabaseObject[]>;
+    findById(value: string): Promise<DatabaseObject>;
+    find(where: string, value: string): Promise<DatabaseObject[]>;
+  }
+  
 
 export interface Connection {
+    client: DatabaseClient,
     getDatabaseName: string;
     getCollection: (collectionName: string) => Collection;
     UriDetails: UriDetails;
@@ -37,10 +41,10 @@ export interface RequestDetails {
     hasBody: boolean;
 }
 export enum CollectionActionType {
-    CONNECTION = "CONNECTION",
-    INSERTORUPDATE = "INSERTORUPDATE",
-    FINDALL = "FINDALL",
-    FINDBYID = "FINDBYID",
-    FIND = "FIND",
-    DELETE = "DELETE"
+    CONNECTION = "connection",
+    INSERTORUPDATE = "insertorupdate",
+    FINDALL = "findall",
+    FINDBYID = "findbyid",
+    FIND = "find",
+    DELETE = "delete"
 }
